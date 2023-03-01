@@ -46,13 +46,33 @@ const showPhones = (phones) => {
     phoneWrapper.appendChild(div);
     console.log(phone);
   });
+
+  //stop spinner
+
+  toggleSpinner(false);
 };
 
+// getting text from search field
+
 const searchPhone = () => {
+  //start spinner
+
+  toggleSpinner(true);
   const search = getId('search-field');
   const getSearchValue = search.value;
   search.value = '';
   fetchPhones(getSearchValue);
 };
 
-fetchPhones();
+// implementing spinner logic
+
+const toggleSpinner = (isLoading) => {
+  const loadSpinner = getId('load-spinner');
+  if (isLoading) {
+    loadSpinner.classList.remove('d-none');
+  } else {
+    loadSpinner.classList.add('d-none');
+  }
+};
+//We have hide fetchPhones() function otherwise it will be called and page will be loaded
+// fetchPhones();
