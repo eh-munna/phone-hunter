@@ -6,8 +6,8 @@ const getId = (id) => document.getElementById(id);
 
 // fetching data
 
-const fetchPhones = async () => {
-  const url = `https://openapi.programming-hero.com/api/phones?search=iphone`;
+const fetchPhones = async (searchValue) => {
+  const url = `https://openapi.programming-hero.com/api/phones?search=${searchValue}`;
   const response = await fetch(url);
   const data = await response.json();
   showPhones(data.data);
@@ -16,6 +16,7 @@ const fetchPhones = async () => {
 // showing phones
 const showPhones = (phones) => {
   const phoneWrapper = getId('phone-wrapper');
+  phoneWrapper.innerHTML = '';
   phones.forEach((phone) => {
     const { image, phone_name, brand } = phone;
     const div = document.createElement('div');
@@ -34,6 +35,13 @@ const showPhones = (phones) => {
     phoneWrapper.appendChild(div);
     console.log(phone);
   });
+};
+
+const searchPhone = () => {
+  const search = getId('search-field');
+  const getSearchValue = search.value;
+  search.value = '';
+  fetchPhones(getSearchValue);
 };
 
 fetchPhones();
