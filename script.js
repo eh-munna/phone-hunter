@@ -15,6 +15,17 @@ const fetchPhones = async (searchValue) => {
 
 // showing phones
 const showPhones = (phones) => {
+  // bad search result
+
+  const warningMessage = getId('warning-message');
+  if (phones.length === 0) {
+    //here when we search something wrong then phones array becomes empty
+    // phones or data.data = []
+    warningMessage.classList.remove('d-none');
+  } else {
+    warningMessage.classList.add('d-none');
+  }
+
   const phoneWrapper = getId('phone-wrapper');
   phoneWrapper.innerHTML = '';
   phones.forEach((phone) => {
