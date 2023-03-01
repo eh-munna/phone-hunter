@@ -6,15 +6,26 @@ const getId = (id) => document.getElementById(id);
 
 // fetching data
 
-const fetchPhones = async (searchValue) => {
+const fetchPhones = async (searchValue, dataLimit) => {
   const url = `https://openapi.programming-hero.com/api/phones?search=${searchValue}`;
   const response = await fetch(url);
   const data = await response.json();
-  showPhones(data.data);
+  showPhones(data.data, dataLimit);
 };
 
 // showing phones
-const showPhones = (phones) => {
+const showPhones = (phones, dataLimit) => {
+  //phone-wrapper selection and empty the wrapper
+  const phoneWrapper = getId('phone-wrapper');
+  phoneWrapper.textContent = '';
+  //display specific number of phones or all phones
+  const showAllWrap = getId('show-all-wrap');
+  if (dataLimit && phones.length > 10) {
+    phones = phones.slice(0, 10);
+    showAllWrap.classList.remove('d-none');
+  } else {
+    showAllWrap.classList.add('d-none');
+  }
   // bad search result
 
   const warningMessage = getId('warning-message');
@@ -26,10 +37,8 @@ const showPhones = (phones) => {
     warningMessage.classList.add('d-none');
   }
 
-  const phoneWrapper = getId('phone-wrapper');
-  phoneWrapper.innerHTML = '';
   phones.forEach((phone) => {
-    const { image, phone_name, brand } = phone;
+    const { image, phone_name } = phone;
     const div = document.createElement('div');
     div.classList.add('col');
     div.innerHTML = `
@@ -44,7 +53,6 @@ const showPhones = (phones) => {
     `;
 
     phoneWrapper.appendChild(div);
-    console.log(phone);
   });
 
   //stop spinner
@@ -54,14 +62,14 @@ const showPhones = (phones) => {
 
 // getting text from search field
 
-const searchPhone = () => {
+const searchPhone = (dataLimit) => {
   //start spinner
 
   toggleSpinner(true);
   const search = getId('search-field');
   const getSearchValue = search.value;
   search.value = '';
-  fetchPhones(getSearchValue);
+  fetchPhones(getSearchValue, dataLimit);
 };
 
 // implementing spinner logic
@@ -74,5 +82,11 @@ const toggleSpinner = (isLoading) => {
     loadSpinner.classList.add('d-none');
   }
 };
+
+const btnShowAll = getId('btn-show-all');
+btnShowAll.addEventListener('click', function () {
+  searchPhone();
+});
+
 //We have hide fetchPhones() function otherwise it will be called and page will be loaded
 // fetchPhones();
